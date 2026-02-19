@@ -1,0 +1,24 @@
+{
+  "success": {
+    "ok": true,
+    "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID",
+    "result": {
+      "summary": "User is requesting to start the survey.",
+      "answers": [
+        { "question_id": "q1", "question": "...", "answer": "..." }
+      ]
+    },
+    "meta": {
+      "model": "VERTEX_MODEL_NAME",
+      "latency_ms": 842
+    }
+  },
+  "error": {
+    "ok": false,
+    "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID",
+    "error": {
+      "code": "VERTEX_UNAVAILABLE",
+      "message": "Upstream model call failed."
+    }
+  }
+}

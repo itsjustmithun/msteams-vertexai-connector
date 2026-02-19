@@ -1,0 +1,23 @@
+{
+  "source": "msteams",
+  "event_type": "message_mentioned",
+  "team": {
+    "id": "TEAM_ID",
+    "channel_id": "CHANNEL_ID"
+  },
+  "message": {
+    "id": "MESSAGE_ID",
+    "content_type": "html",
+    "content": "<p>Hello @Agent please run survey</p>",
+    "created_at": "2026-02-19T10:15:30Z",
+    "reply_to_id": null
+  },
+  "sender": {
+    "id": "USER_ID",
+    "display_name": "Jane Doe"
+  },
+  "mentions": [
+    { "type": "user", "id": "AGENT_USER_ID", "display_name": "MSTeams Vertex Connector" }
+  ],
+  "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID"
+}
