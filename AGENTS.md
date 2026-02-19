@@ -1,10 +1,12 @@
-# AGENTS.md
-
-priority: high
-scope: entire repository
-purpose: enforce minimal, modular, production-safe implementation
-
 ---
+alwaysApply: true
+always_on: true
+trigger: always_on
+applyTo: "**"
+description: Enforce minimal, modular, production-safe implementation
+---
+
+# AGENTS.md
 
 ## Mission
 
