@@ -1,14 +1,15 @@
-# MSTeams VertexAI Connector
+
+## MSTeams VertexAI Connector
 
 Sample FastAPI service that connects Microsoft Teams (via Power Automate) to Vertex AI through LangChain and returns stable JSON for downstream flows.
 
-## What it does
+### What it does
 
 - Receives HTTP calls from Power Automate (Teams events).
 - Builds a compact prompt and calls Vertex AI through LangChain.
 - Returns a deterministic JSON shape for success and error cases.
 
-## Architecture
+### Architecture
 
 - API layer handles request validation and HTTP only.
 - Core layer handles orchestration and prompt logic.
@@ -16,13 +17,13 @@ Sample FastAPI service that connects Microsoft Teams (via Power Automate) to Ver
 - Config layer reads environment variables only.
 - Formatter owns the final JSON shape.
 
-## Requirements
+### Requirements
 
 - Python 3.11+
 - GCP project with Vertex AI enabled
 - Application Default Credentials (ADC) or a service account JSON
 
-## Setup
+### Setup
 
 ```bash
 python -m venv .venv
@@ -31,7 +32,7 @@ pip install -r requirements.txt
 pip install uvicorn
 ```
 
-## Configuration
+### Configuration
 
 Set the required environment variables:
 
@@ -52,19 +53,19 @@ Authentication options:
 - `gcloud auth application-default login`
 - or set `GOOGLE_APPLICATION_CREDENTIALS` to a service account JSON path
 
-## Run locally
+### Run locally
 
 ```bash
 uvicorn src.app:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## Power Automate notes
+### Power Automate notes
 
 - Use an HTTP action to call `/survey` (or `SURVEY_PATH` if overridden).
 - Keep response parsing strictly by JSON keys (`ok`, `result`, `error`).
 - Always pass a `correlation_id` from your flow for traceability.
 
-## Schemas
+### Schemas
 
 - Request example: [schema/request.json](schema/request.json)
 - Response example: [schema/response.json](schema/response.json)
