@@ -1,26 +1,27 @@
-import time
+from typing import Callable, Dict
 
 from src.core.errors import CoreError
-from src.core.formatter import format_model_output
 from src.core.models import AgentResult, CoreRequest
-from src.core.prompts import SURVEY_QUESTIONS, build_prompt
 from src.providers.vertex_ai import VertexAIProvider
 
+AgentRunner = Callable[[CoreRequest, VertexAIProvider], AgentResult]
 
-def run_agent(request: CoreRequest, provider: VertexAIProvider) -> AgentResult:
-    prompt = build_prompt(request.message_content, request.sender_name)
-    start = time.time()
-    try:
-        model_output = provider.generate(prompt)
-    except Exception as exc:
-        raise CoreError("VERTEX_UNAVAILABLE", "Upstream model call failed.") from exc
+AGENT_RUNNERS: Dict[str, AgentRunner] = {}
 
-    latency_ms = int((time.time() - start) * 1000)
-    summary, answers = format_model_output(model_output, SURVEY_QUESTIONS)
 
-    return AgentResult(
-        summary=summary,
-        answers=answers,
-        model=provider.model_name,
-        latency_ms=latency_ms,
-    )
+def register_agent_runner(agent_key: str, runner: AgentRunner) -> None:
+    AGENT_RUNNERS[agent_key] = runner
+
+
+def get_agent_runner(agent_key: str) -> AgentRunner:
+    runner = AGENT_RUNNERS.get(agent_key)
+    if runner is None:
+        raise CoreError("AGENT_NOT_FOUND", f"Unknown agent: {agent_key}")
+    return runner
+
+
+def run_agent(
+    request: CoreRequest, provider: VertexAIProvider, agent_key: str
+) -> AgentResult:
+    runner = get_agent_runner(agent_key)
+    return runner(request, provider)

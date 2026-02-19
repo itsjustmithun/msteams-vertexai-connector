@@ -3,14 +3,42 @@
     "ok": true,
     "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID",
     "result": {
-      "summary": "User is requesting to start the survey.",
+      "summary": "Survey in progress.",
+      "status": "in_progress",
+      "agent_message": "Who is the intended audience?",
+      "survey_state": {
+        "status": "in_progress",
+        "initial_message": "<p>Hello @Agent please run survey</p>",
+        "current_question_id": "q2",
+        "awaiting_question_id": "q2",
+        "answers": [
+          { "question_id": "q1", "answer": "Collect onboarding feedback." }
+        ]
+      },
       "answers": [
-        { "question_id": "q1", "question": "...", "answer": "..." }
+        {
+          "question_id": "q1",
+          "question": "What is the goal of this survey request?",
+          "answer": "Collect onboarding feedback.",
+          "solution_id": "s1"
+        },
+        {
+          "question_id": "q2",
+          "question": "Who is the intended audience?",
+          "answer": "",
+          "solution_id": "s2"
+        },
+        {
+          "question_id": "q3",
+          "question": "When should the survey be run?",
+          "answer": "",
+          "solution_id": "s3"
+        }
       ]
     },
     "meta": {
       "model": "VERTEX_MODEL_NAME",
-      "latency_ms": 842
+      "latency_ms": 0
     }
   },
   "error": {

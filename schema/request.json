@@ -19,5 +19,14 @@
   "mentions": [
     { "type": "user", "id": "AGENT_USER_ID", "display_name": "MSTeams Vertex Connector" }
   ],
-  "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID"
+  "correlation_id": "FLOW_RUN_ID_OR_CUSTOM_GUID",
+  "survey_state": {
+    "status": "in_progress",
+    "initial_message": "<p>Hello @Agent please run survey</p>",
+    "current_question_id": "q2",
+    "awaiting_question_id": "q2",
+    "answers": [
+      { "question_id": "q1", "answer": "Collect onboarding feedback." }
+    ]
+  }
 }

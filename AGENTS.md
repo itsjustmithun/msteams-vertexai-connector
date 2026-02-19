@@ -74,12 +74,11 @@ Do not introduce:
 
 ## Required Skills Usage
 
-
 Before implementing:
 
-- Use `coding-skills.md` for architectural and implementation guidance.
-- Use `testing-skills.md` when modifying API, schemas, or providers.
-- Use the `review-skills.md` when user asks to review the code.
+- Use `.skills/coding-skills.md` for architectural and implementation guidance.
+- Use `.skills/testing-skills.md` when modifying API, schemas, or providers.
+- Use the `.skills/review-skills.md` when user asks to review the code.
 
 Do not bypass skills guidance.
 

@@ -24,10 +24,18 @@ def get_settings() -> AppSettings:
     )
 
 
-def get_survey_path() -> str:
-    path = os.getenv("SURVEY_PATH", "/survey").strip()
+def get_configured_path(
+    env_key: str,
+    default: str,
+    legacy_env_key: str = "",
+) -> str:
+    path = os.getenv(env_key, "").strip()
+    if not path and legacy_env_key:
+        path = os.getenv(legacy_env_key, "").strip()
     if not path:
-        return "/survey"
+        path = default.strip()
+    if not path:
+        return default
     if not path.startswith("/"):
         path = f"/{path}"
     return path

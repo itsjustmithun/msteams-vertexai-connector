@@ -1,5 +1,6 @@
 from fastapi import APIRouter
 
+from src.agents.survey_agent import run_survey_agent
 from src.api.schemas import (
     AnswerItem,
     ErrorDetail,
@@ -10,14 +11,23 @@ from src.api.schemas import (
     SurveyRequest,
     SurveyResponse,
 )
-from src.config.settings import get_settings, get_survey_path
-from src.core.agent import run_agent
+from src.config.settings import get_configured_path, get_settings
+from src.core.formatter import serialize_agent_state
+from src.core.agent import register_agent_runner, run_agent
 from src.core.errors import CoreError
 from src.core.models import CoreRequest
 from src.providers.vertex_ai import VertexAIProvider
 
 router = APIRouter()
-SURVEY_PATH = get_survey_path()
+SURVEY_PATH = get_configured_path(
+    env_key="AGENT_SURVEY_PATH",
+    default="/survey",
+    legacy_env_key="SURVEY_PATH",
+)
+PATH_TO_AGENT_KEY = {
+    SURVEY_PATH: "survey",
+}
+register_agent_runner(PATH_TO_AGENT_KEY[SURVEY_PATH], run_survey_agent)
 
 
 def get_vertex_provider() -> VertexAIProvider:
@@ -45,8 +55,13 @@ def survey(request: SurveyRequest) -> SurveyResponse:
             sender_name=request.sender.display_name,
             mentions=[mention.model_dump() for mention in request.mentions],
             correlation_id=request.correlation_id,
+            agent_state=(
+                request.survey_state.model_dump()
+                if request.survey_state is not None
+                else None
+            ),
         )
-        result = run_agent(core_request, provider)
+        result = run_agent(core_request, provider, agent_key=PATH_TO_AGENT_KEY[SURVEY_PATH])
         return SuccessResponse(
             ok=True,
             correlation_id=request.correlation_id,
@@ -57,9 +72,13 @@ def survey(request: SurveyRequest) -> SurveyResponse:
                         question_id=answer.question_id,
                         question=answer.question,
                         answer=answer.answer,
+                        solution_id=answer.solution_id,
                     )
                     for answer in result.answers
                 ],
+                status=result.status,
+                agent_message=result.agent_message,
+                survey_state=serialize_agent_state(result.agent_state),
             ),
             meta=Meta(model=result.model, latency_ms=result.latency_ms),
         )

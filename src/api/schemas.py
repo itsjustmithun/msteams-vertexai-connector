@@ -1,6 +1,6 @@
-from typing import List, Optional, Union
+from typing import List, Literal, Optional, Union
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class Team(BaseModel):
@@ -31,6 +31,21 @@ class Mention(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
+class StateAnswerItem(BaseModel):
+    question_id: str
+    answer: str
+    model_config = ConfigDict(extra="forbid")
+
+
+class SurveyState(BaseModel):
+    status: Literal["in_progress"]
+    initial_message: str
+    current_question_id: Optional[str] = None
+    awaiting_question_id: Optional[str] = None
+    answers: List[StateAnswerItem] = Field(default_factory=list)
+    model_config = ConfigDict(extra="forbid")
+
+
 class SurveyRequest(BaseModel):
     source: str
     event_type: str
@@ -39,6 +54,7 @@ class SurveyRequest(BaseModel):
     sender: Sender
     mentions: List[Mention]
     correlation_id: str
+    survey_state: Optional[SurveyState] = None
     model_config = ConfigDict(extra="forbid")
 
 
@@ -46,12 +62,16 @@ class AnswerItem(BaseModel):
     question_id: str
     question: str
     answer: str
+    solution_id: Optional[str] = None
     model_config = ConfigDict(extra="forbid")
 
 
 class Result(BaseModel):
     summary: str
     answers: List[AnswerItem]
+    status: Optional[Literal["in_progress", "completed"]] = None
+    agent_message: Optional[str] = None
+    survey_state: Optional[SurveyState] = None
     model_config = ConfigDict(extra="forbid")
 
 
